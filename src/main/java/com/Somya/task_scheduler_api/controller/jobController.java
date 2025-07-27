@@ -1,36 +1,41 @@
 package com.Somya.task_scheduler_api.controller;
 
 import com.Somya.task_scheduler_api.model.Job;
-import com.Somya.task_scheduler_api.repository.jobRepository;
+// Notice the capital 'J' and 'R' here. This is important!
+import com.Somya.task_scheduler_api.repository.JobRepository;
+// This is the new import for our message-sending tool
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RestController //will handle web requests
-@RequestMapping("/api/jobs") // All endpoints in this class will start with /api/jobs
-public class jobController {
+@RestController
+@RequestMapping("/api/jobs")
+public class JobController {
 
-    // Spring's magic to give us an instance of our JobRepository
     @Autowired
-    private jobRepository jobRepository;
+    private JobRepository jobRepository;
 
-    /**
-     * Endpoint to create a new job.
-     * Listens for POST requests to http://localhost:8080/api/jobs
-     */
+    // Here is our new tool for sending messages!
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+
     @PostMapping
     public ResponseEntity<Job> createJob(@RequestBody Job newJob) {
-        // The @PrePersist methods in your Job entity will set the timestamps automatically
+        // 1. Save the job to the database
         Job savedJob = jobRepository.save(newJob);
+
+        // 2. Send a message to the queue with the new job's ID
+        rabbitTemplate.convertAndSend("job.queue", savedJob.getId().toString());
+        System.out.println("Sent message to queue for Job ID: " + savedJob.getId());
+
+        // 3. Return the response
         return ResponseEntity.ok(savedJob);
     }
 
-    /**
-     * Endpoint to get a job by its ID.
-     * Listens for GET requests to http://localhost:8080/api/jobs/{id}
-     */
     @GetMapping("/{id}")
     public ResponseEntity<Job> getJobById(@PathVariable Long id) {
         Optional<Job> jobOptional = jobRepository.findById(id);

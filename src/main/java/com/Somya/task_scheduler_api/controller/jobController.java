@@ -1,4 +1,3 @@
-// src/main/java/com/Somya/task_scheduler_api/controller/JobController.java
 package com.Somya.task_scheduler_api.controller;
 
 import com.Somya.task_scheduler_api.model.Job;
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@RestController // Tells Spring this class will handle web requests
+@RestController //will handle web requests
 @RequestMapping("/api/jobs") // All endpoints in this class will start with /api/jobs
 public class jobController {
 

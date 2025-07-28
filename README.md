@@ -26,10 +26,15 @@ Postman --- (HTTP POST Request) ---> API Server --- (Saves to) ---> PostgreSQL D
 
 # Tech I'm Using
    Language: Java 17
+   
    Framework: Spring Boot 3
+   
    Database: PostgreSQL (running in a Docker container)
+   
    Messaging: RabbitMQ (also running in a Docker container)
+   
    API Testing: Postman
+   
    Build Tool: Maven
 
 # How to Run What We Have So Far

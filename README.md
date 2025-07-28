@@ -37,7 +37,10 @@ Postman --- (HTTP POST Request) ---> API Server --- (Saves to) ---> PostgreSQL D
 
 # Prerequisites:
    Java 17 (JDK)
+   
    Docker Desktop
+
+   Postman
 
 # Steps:
 

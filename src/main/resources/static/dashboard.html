@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Scheduler Pro - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .status-pending { @apply bg-yellow-100 text-yellow-800 border border-yellow-200; }
+        .status-running { @apply bg-blue-100 text-blue-800 border border-blue-200; }
+        .status-completed { @apply bg-green-100 text-green-800 border border-green-200; }
+        .status-failed { @apply bg-red-100 text-red-800 border border-red-200; }
+        .status-cancelled { @apply bg-gray-100 text-gray-800 border border-gray-200; }
+        .card-shadow { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+        .animate-pulse-slow { animation: pulse 3s infinite; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation Header -->
+    <nav class="gradient-bg shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-clock text-white text-2xl mr-3"></i>
+                    <h1 class="text-white text-xl font-bold">Task Scheduler Pro</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="text-white text-sm">
+                        <i class="fas fa-circle text-green-400 mr-1"></i>
+                        <span id="connection-status">Connected</span>
+                    </div>
+                    <button onclick="refreshDashboard()" class="text-white hover:text-gray-200 transition-colors">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                        <i class="fas fa-tasks text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-2xl font-bold text-gray-900" id="total-jobs">0</h3>
+                        <p class="text-gray-600">Total Jobs</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                        <i class="fas fa-clock text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-2xl font-bold text-gray-900" id="pending-jobs">0</h3>
+                        <p class="text-gray-600">Pending</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                        <i class="fas fa-spinner text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-2xl font-bold text-gray-900" id="running-jobs">0</h3>
+                        <p class="text-gray-600">Running</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100 text-green-600">
+                        <i class="fas fa-check-circle text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <h3 class="text-2xl font-bold text-gray-900" id="completed-jobs">0</h3>
+                        <p class="text-gray-600">Completed</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Create Job Form -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                        <i class="fas fa-plus-circle text-blue-600 mr-2"></i>
+                        Create New Job
+                    </h2>
+                    
+                    <form id="job-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Job Title</label>
+                            <input type="text" id="job-title" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                   placeholder="e.g., Send Welcome Email">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                            <textarea id="job-description" rows="3" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                      placeholder="Describe what this job will do..."></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Scheduled Date & Time</label>
+                            <input type="datetime-local" id="job-time" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        
+                        <button type="submit" 
+                                class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors flex items-center justify-center">
+                            <i class="fas fa-plus mr-2"></i>
+                            Schedule Job
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Jobs List -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-lg">
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-xl font-semibold text-gray-900 flex items-center">
+                                <i class="fas fa-list text-gray-600 mr-2"></i>
+                                All Jobs
+                            </h2>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="loadJobs()" class="text-blue-600 hover:text-blue-800 transition-colors">
+                                    <i class="fas fa-refresh"></i>
+                                </button>
+                                <span class="text-sm text-gray-500" id="last-updated">Last updated: Never</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="p-6">
+                        <div id="jobs-loading" class="text-center py-8 hidden">
+                            <i class="fas fa-spinner fa-spin text-blue-600 text-2xl mb-2"></i>
+                            <p class="text-gray-600">Loading jobs...</p>
+                        </div>
+                        
+                        <div id="jobs-container" class="space-y-4">
+                            <!-- Jobs will be populated here -->
+                        </div>
+                        
+                        <div id="no-jobs" class="text-center py-8 hidden">
+                            <i class="fas fa-inbox text-gray-400 text-4xl mb-4"></i>
+                            <p class="text-gray-600">No jobs found. Create your first job!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error Messages -->
+    <div id="message-container" class="fixed top-4 right-4 z-50"></div>
+
+    <script>
+        // Global variables
+        let jobs = [];
+        let refreshInterval;
+
+        // Initialize the dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadJobs();
+            setupAutoRefresh();
+            setDefaultDateTime();
+        });
+
+        // Set default datetime to current time + 1 hour
+        function setDefaultDateTime() {
+            const now = new Date();
+            now.setHours(now.getHours() + 1);
+            const isoString = now.toISOString().slice(0, 16);
+            document.getElementById('job-time').value = isoString;
+        }
+
+        // Load jobs from API
+        async function loadJobs() {
+            showLoading(true);
+            try {
+                const response = await fetch('/api/jobs');
+                if (!response.ok) throw new Error('Failed to fetch jobs');
+                
+                jobs = await response.json();
+                displayJobs();
+                updateStats();
+                updateConnectionStatus(true);
+                
+                document.getElementById('last-updated').textContent = 
+                    'Last updated: ' + new Date().toLocaleTimeString();
+                    
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+                updateConnectionStatus(false);
+                showMessage('Failed to load jobs. Please check your connection.', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Display jobs in the UI
+        function displayJobs() {
+            const container = document.getElementById('jobs-container');
+            const noJobsDiv = document.getElementById('no-jobs');
+            
+            if (jobs.length === 0) {
+                container.innerHTML = '';
+                noJobsDiv.classList.remove('hidden');
+                return;
+            }
+            
+            noJobsDiv.classList.add('hidden');
+            
+            // Sort jobs by created date (newest first)
+            const sortedJobs = [...jobs].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            container.innerHTML = sortedJobs.map(job => `
+                <div class="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-900 text-lg">${escapeHtml(job.title)}</h3>
+                            <p class="text-gray-600 text-sm mt-1">${escapeHtml(job.description || 'No description')}</p>
+                        </div>
+                        <span class="status-${job.status.toLowerCase()} px-3 py-1 rounded-full text-xs font-medium ml-4">
+                            ${getStatusIcon(job.status)} ${job.status}
+                        </span>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm text-gray-600">
+                        <div class="flex items-center">
+                            <i class="fas fa-calendar text-gray-400 mr-2"></i>
+                            <span>Scheduled: ${formatDateTime(job.scheduledTime)}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-clock text-gray-400 mr-2"></i>
+                            <span>Created: ${formatDateTime(job.createdAt)}</span>
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-edit text-gray-400 mr-2"></i>
+                            <span>Updated: ${formatDateTime(job.updatedAt)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update statistics
+        function updateStats() {
+            const total = jobs.length;
+            const pending = jobs.filter(job => job.status === 'PENDING').length;
+            const running = jobs.filter(job => job.status === 'RUNNING').length;
+            const completed = jobs.filter(job => job.status === 'COMPLETED').length;
+            
+            document.getElementById('total-jobs').textContent = total;
+            document.getElementById('pending-jobs').textContent = pending;
+            document.getElementById('running-jobs').textContent = running;
+            document.getElementById('completed-jobs').textContent = completed;
+        }
+
+        // Handle form submission
+        document.getElementById('job-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const jobData = {
+                title: document.getElementById('job-title').value,
+                description: document.getElementById('job-description').value,
+                scheduledTime: document.getElementById('job-time').value + ':00'
+            };
+            
+            try {
+                const response = await fetch('/api/jobs', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(jobData)
+                });
+                
+                if (!response.ok) throw new Error('Failed to create job');
+                
+                const newJob = await response.json();
+                showMessage('Job created successfully!', 'success');
+                
+                // Reset form
+                document.getElementById('job-form').reset();
+                setDefaultDateTime();
+                
+                // Reload jobs
+                loadJobs();
+                
+            } catch (error) {
+                console.error('Error creating job:', error);
+                showMessage('Failed to create job. Please try again.', 'error');
+            }
+        });
+
+        // Utility functions
+        function showLoading(show) {
+            document.getElementById('jobs-loading').classList.toggle('hidden', !show);
+        }
+
+        function updateConnectionStatus(connected) {
+            const statusEl = document.getElementById('connection-status');
+            if (connected) {
+                statusEl.innerHTML = '<i class="fas fa-circle text-green-400 mr-1"></i>Connected';
+            } else {
+                statusEl.innerHTML = '<i class="fas fa-circle text-red-400 mr-1"></i>Disconnected';
+            }
+        }
+
+        function showMessage(message, type) {
+            const container = document.getElementById('message-container');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `p-4 rounded-lg shadow-lg mb-2 ${
+                type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 
+                'bg-red-100 text-red-800 border border-red-200'
+            }`;
+            messageDiv.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} mr-2"></i>
+                    ${message}
+                </div>
+            `;
+            
+            container.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        function getStatusIcon(status) {
+            const icons = {
+                'PENDING': '<i class="fas fa-clock"></i>',
+                'RUNNING': '<i class="fas fa-spinner fa-spin"></i>',
+                'COMPLETED': '<i class="fas fa-check-circle"></i>',
+                'FAILED': '<i class="fas fa-times-circle"></i>',
+                'CANCELLED': '<i class="fas fa-ban"></i>'
+            };
+            return icons[status] || '<i class="fas fa-question-circle"></i>';
+        }
+
+        function formatDateTime(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleString();
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function setupAutoRefresh() {
+            refreshInterval = setInterval(loadJobs, 30000); // Refresh every 30 seconds
+        }
+
+        function refreshDashboard() {
+            loadJobs();
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+    </script>
+</body>
+</html>

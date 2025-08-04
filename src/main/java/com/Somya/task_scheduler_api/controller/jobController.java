@@ -1,14 +1,14 @@
 package com.Somya.task_scheduler_api.controller;
 
 import com.Somya.task_scheduler_api.model.Job;
-// Notice the capital 'J' and 'R' here. This is important!
 import com.Somya.task_scheduler_api.repository.JobRepository;
-// This is the new import for our message-sending tool
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// Add this new import for the List
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -18,11 +18,12 @@ public class JobController {
     @Autowired
     private JobRepository jobRepository;
 
-    // Here is our new tool for sending messages!
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-
+    /**
+     * Handles POST requests to create a new job.
+     */
     @PostMapping
     public ResponseEntity<Job> createJob(@RequestBody Job newJob) {
         // 1. Save the job to the database
@@ -36,6 +37,10 @@ public class JobController {
         return ResponseEntity.ok(savedJob);
     }
 
+    /**
+     * Handles GET requests for a single job by its ID.
+     * Example: /api/jobs/1
+     */
     @GetMapping("/{id}")
     public ResponseEntity<Job> getJobById(@PathVariable Long id) {
         Optional<Job> jobOptional = jobRepository.findById(id);
@@ -45,5 +50,16 @@ public class JobController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    /**
+     * Handles GET requests for all jobs.
+     * This is the new method you are adding.
+     * Example: /api/jobs
+     */
+    @GetMapping
+    public ResponseEntity<List<Job>> getAllJobs() {
+        List<Job> allJobs = jobRepository.findAll();
+        return ResponseEntity.ok(allJobs);
     }
 }

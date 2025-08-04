@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Scheduler Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .feature-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+    </style>
+</head>
+<body class="bg-white">
+    <!-- Hero Section -->
+    <div class="gradient-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="py-20 text-center">
+                <div class="mb-8">
+                    <i class="fas fa-clock text-white text-6xl mb-4"></i>
+                    <h1 class="text-5xl font-bold text-white mb-4">Task Scheduler Pro</h1>
+                    <p class="text-xl text-blue-100 max-w-2xl mx-auto">
+                        A powerful, enterprise-grade task scheduling system built with Spring Boot and RabbitMQ. 
+                        Schedule, monitor, and manage your background jobs with ease.
+                    </p>
+                </div>
+                
+                <div class="flex justify-center space-x-4">
+                    <a href="/dashboard.html" 
+                       class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg">
+                        <i class="fas fa-tachometer-alt mr-2"></i>
+                        Open Dashboard
+                    </a>
+                    <a href="/api/jobs" target="_blank"
+                       class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors">
+                        <i class="fas fa-code mr-2"></i>
+                        View API
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">System Status</h2>
+                <p class="text-gray-600">Real-time overview of your task scheduler</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8" id="stats-grid">
+                <!-- Stats will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold gradient-text mb-4">Powerful Features</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Built with modern technologies and best practices for enterprise-level task scheduling
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="feature-card bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-blue-600 text-3xl mb-4">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Flexible Scheduling</h3>
+                    <p class="text-gray-600">Schedule tasks for any future date and time with precision timing and automatic execution.</p>
+                </div>
+                
+                <div class="feature-card bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-green-600 text-3xl mb-4">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Persistent Storage</h3>
+                    <p class="text-gray-600">All jobs are stored in PostgreSQL database ensuring data persistence and reliability.</p>
+                </div>
+                
+                <div class="feature-card bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-purple-600 text-3xl mb-4">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Message Queue</h3>
+                    <p class="text-gray-600">Powered by RabbitMQ for reliable message delivery and distributed processing.</p>
+                </div>
+                
+                <div class="feature-card bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-red-600 text-3xl mb-4">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Real-time Monitoring</h3>
+                    <p class="text-gray-600">Monitor job status, execution times, and system health in real-time.</p>
+                </div>
+                
+                <div class="feature-card bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-yellow-600 text-3xl mb-4">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Responsive Design</h3>
+                    <p class="text-gray-600">Beautiful, mobile-first dashboard that works perfectly on all devices.</p>
+                </div>
+                
+                <div class="feature-card bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-indigo-600 text-3xl mb-4">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Enterprise Ready</h3>
+                    <p class="text-gray-600">Built with Spring Boot following enterprise-grade architecture patterns.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technology Stack -->
+    <div class="py-16 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-white mb-4">Built With Modern Technologies</h2>
+                <p class="text-gray-400">Leveraging the best tools and frameworks for robust performance</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 text-center">
+                <div class="text-white">
+                    <i class="fab fa-java text-4xl mb-2 text-orange-500"></i>
+                    <p class="text-sm">Java 17</p>
+                </div>
+                <div class="text-white">
+                    <i class="fas fa-leaf text-4xl mb-2 text-green-500"></i>
+                    <p class="text-sm">Spring Boot</p>
+                </div>
+                <div class="text-white">
+                    <i class="fas fa-database text-4xl mb-2 text-blue-500"></i>
+                    <p class="text-sm">PostgreSQL</p>
+                </div>
+                <div class="text-white">
+                    <i class="fas fa-stream text-4xl mb-2 text-purple-500"></i>
+                    <p class="text-sm">RabbitMQ</p>
+                </div>
+                <div class="text-white">
+                    <i class="fab fa-html5 text-4xl mb-2 text-red-500"></i>
+                    <p class="text-sm">HTML5</p>
+                </div>
+                <div class="text-white">
+                    <i class="fab fa-js-square text-4xl mb-2 text-yellow-500"></i>
+                    <p class="text-sm">JavaScript</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="gradient-bg py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="text-white">
+                <p class="mb-2">&copy; 2025 Task Scheduler Pro. Built with ❤️ using Spring Boot.</p>
+                <p class="text-blue-200 text-sm">A professional task scheduling solution for modern applications.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Load and display system stats
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/jobs');
+                if (!response.ok) throw new Error('Failed to fetch jobs');
+                
+                const jobs = await response.json();
+                
+                const stats = {
+                    total: jobs.length,
+                    pending: jobs.filter(job => job.status === 'PENDING').length,
+                    running: jobs.filter(job => job.status === 'RUNNING').length,
+                    completed: jobs.filter(job => job.status === 'COMPLETED').length
+                };
+                
+                displayStats(stats);
+                
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                displayStats({ total: '?', pending: '?', running: '?', completed: '?' });
+            }
+        }
+
+        function displayStats(stats) {
+            const statsGrid = document.getElementById('stats-grid');
+            statsGrid.innerHTML = `
+                <div class="text-center">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <div class="text-3xl font-bold text-blue-600 mb-2">${stats.total}</div>
+                        <div class="text-gray-600">Total Jobs</div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <div class="text-3xl font-bold text-yellow-600 mb-2">${stats.pending}</div>
+                        <div class="text-gray-600">Pending</div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <div class="text-3xl font-bold text-blue-600 mb-2">${stats.running}</div>
+                        <div class="text-gray-600">Running</div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div class="bg-white rounded-lg shadow-lg p-6">
+                        <div class="text-3xl font-bold text-green-600 mb-2">${stats.completed}</div>
+                        <div class="text-gray-600">Completed</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Load stats when page loads
+        document.addEventListener('DOMContentLoaded', loadStats);
+    </script>
+</body>
+</html>

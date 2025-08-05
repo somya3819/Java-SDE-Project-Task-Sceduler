@@ -4,7 +4,7 @@ Hey! Welcome to my distributed task scheduler project. I'm building this system 
 # Project Status: This project is currently about 50% complete. The foundation is laid, the core components are talking to each other, and it's ready for the next phase.
 
 # What's the Big Idea?
-So, what am I actually building? Imagine a system that can handle background tasks—like sending out thousands of welcome emails, generating daily reports, or processing uploaded videos—without slowing down the main application.
+So, what am I actually building? Imagine a system that can handle background tasks like sending out thousands of welcome emails, generating daily reports, or processing uploaded videos without slowing down the main application.
 
 This project is my attempt at building a smaller, personal version of the powerful scheduling systems used at big tech companies. It's designed to be reliable and to handle tasks asynchronously using a message queue.
 
